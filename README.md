@@ -2,4 +2,4 @@
 
 # Instalación
 Para instalar las librerías necesarias:
-`pip3 install -r requirements.txt`
+<code>pip3 install -r requirements.txt</code>
