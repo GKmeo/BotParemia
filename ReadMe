@@ -1,1 +1,5 @@
-tonto el que lo lea
+
+
+# Instalación
+Para instalar las librerías necesarias:
+`pip3 install -r requirements.txt`
