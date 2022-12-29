@@ -1,0 +1,4 @@
+
+def readconfig():
+    # TODO
+    pass
