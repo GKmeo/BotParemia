@@ -1,39 +1,34 @@
 import util
 
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler
-from telegram.ext import MessageHandler, Filters, CallbackContext
+from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import MessageHandler, filters
 
 
-def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
+    await update.message.reply_html(
+        rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
     )
 
-def echo(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Hola')
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(update.message.text)
+    print(update.message.text)
 
 
 def main():
     token = util.readtoken()
     print("token:", token)
 
-    updater = Updater(token)
+    app = Application.builder().token(token).build()
 
+    app.add_handler(CommandHandler("start", start))
 
-    dispatcher = updater.dispatcher
-
-    dispatcher.add_handler(CommandHandler("start", start))
-
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command,
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
                                           echo))
 
-    updater.start_polling()
-
-    updater.idle()
-
+    app.run_polling()
 
 if __name__ == '__main__':
     main()
