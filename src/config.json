@@ -1,0 +1,7 @@
+{
+    "tkfile": "token.txt",
+    "bot":{
+        "goupId":-83436973,
+        "admins": [1, 2, 3]
+    }
+}
