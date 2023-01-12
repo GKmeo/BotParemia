@@ -1,4 +1,6 @@
 import config as cfg
+import utils  as u
+import telegram
 from telegram     import Update, ForceReply
 from telegram.ext import CommandHandler, MessageHandler
 from telegram.ext import ContextTypes, Application, filters
@@ -22,19 +24,48 @@ class Bot:
 
     def addMsgHandlers(self):
         self.app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                            self.echo))
+                                            self.handleMsg))
     def run(self):
         self.app.run_polling()
         # Para aquí por algún motivo
-        print("Bot terminado")
+        print("\nBot terminado")
+
+    async def handleMsg(self,
+                   update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        msg = update.message
+        print("Mensaje recibido: {}".format(msg.text))
+        try:
+            chatType = msg.chat.type
+            u.screen()
+            if chatType == telegram.constants.ChatType.PRIVATE:
+                u.screen()
+                await msg.reply_text("Sólo comandos en chats privados")
+            elif chatType == telegram.constants.ChatType.CHANNEL:
+                pass
+            else: # GROUP o SUPERGROUP
+                resp     = ""
+                sender   = msg.from_user
+                userid   = sender.id
+                username = sender.username
+
+                resp += "Eres el usuario " + str(userid)
+                if (username != None):
+                    resp += " y tu @ es " + username
+                else:
+                    resp += " y no tienes @"
+                await msg.reply_text(resp)
+        except Exception as e:
+            print("Error - Bot::handleMsg")
+            print(str(e))
 
     async def echo(self,
                    update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(update.message.text)
-        userId   = update.message.chat.id
-        userName = update.message.chat.username
+        userid   = update.message.chat.id
+        username = update.message.chat.username
         text     = update.message.text
-        print("[{} ({})]: {}".format(userId, userName, text))
+        u.screen(userid, username, text)
+
 
     async def start(self,
                     update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
