@@ -1,7 +1,13 @@
 {
     "tkfile": "token.txt",
-    "bot":{
-        "goupId":-83436973,
+    "bot": {
         "admins": [1, 2, 3]
+    },
+    "scraper": {
+        "urls": {
+            "base"    : "https://cvc.cervantes.es/lengua/refranero/",
+            "listado" : "listado.aspx",
+            "busqueda": "Busqueda.aspx"
+        }
     }
 }

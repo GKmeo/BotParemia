@@ -1,5 +1,5 @@
 import config as cfg
-import utils  as u
+import util   as u
 import telegram
 from telegram     import Update, ForceReply
 from telegram.ext import CommandHandler, MessageHandler
@@ -33,27 +33,26 @@ class Bot:
     async def handleMsg(self,
                    update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         msg = update.message
-        print("Mensaje recibido: {}".format(msg.text))
         try:
             chatType = msg.chat.type
-            u.screen()
-            if chatType == telegram.constants.ChatType.PRIVATE:
-                u.screen()
-                await msg.reply_text("Sólo comandos en chats privados")
-            elif chatType == telegram.constants.ChatType.CHANNEL:
+            
+            if chatType == telegram.constants.ChatType.CHANNEL:
                 pass
-            else: # GROUP o SUPERGROUP
-                resp     = ""
-                sender   = msg.from_user
-                userid   = sender.id
+            else:
+                sender = msg.from_user
+                userid = sender.id
                 username = sender.username
-
-                resp += "Eres el usuario " + str(userid)
-                if (username != None):
-                    resp += " y tu @ es " + username
-                else:
-                    resp += " y no tienes @"
-                await msg.reply_text(resp)
+                if chatType == telegram.constants.ChatType.PRIVATE:
+                    u.screen(userid, username, msg.text)
+                    await msg.reply_text("Sólo comandos en chats privados")
+                else: # GROUP or SUPERGROUP
+                    u.screen(userid, username, msg.text, msg.chat.id)
+                    resp = "Eres el usuario " + str(userid)
+                    if (username != None):
+                        resp += " y tu @ es " + username
+                    else:
+                        resp += " y no tienes @"
+                    await msg.reply_text(resp)
         except Exception as e:
             print("Error - Bot::handleMsg")
             print(str(e))
