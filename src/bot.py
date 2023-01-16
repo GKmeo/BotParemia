@@ -8,9 +8,8 @@ from telegram.ext import ContextTypes, Application, filters
 
 
 class Bot:
-    app    = None
-    config = None
-
+    app     = None
+    config  = None
 
     def __init__(self, cfgfn):
         self.config = cfg.Config(cfgfn)

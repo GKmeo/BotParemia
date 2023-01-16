@@ -3,3 +3,9 @@ token.txt
 
 # Caché de Python
 __pycache__
+
+# Ficheros de prueba del scraper
+__refranes
+
+# Fichero de notas
+TODO.md
